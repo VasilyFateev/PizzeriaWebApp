@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlTypes;
 
 namespace ModelClasses
 {
@@ -12,13 +11,14 @@ namespace ModelClasses
         public int Id { get; set; }
         [ForeignKey("FK_product_item_product_id")]
         [Column("product_id")]
-        public Product ProductId { get; set; } = null!;
+        public int ProductId { get; set; } = default!;
         [Column("cooking_time")]
         public int CookingTime { get; set; } = default!;
-        [Column("cooking_time")]
-        public SqlMoney Price { get; set; } = default!;
+        [Column("price")]
+        public decimal Price { get; set; } = default!;
 
         public Product Product { get; set; } = null!;
     }
-
 }
+
+

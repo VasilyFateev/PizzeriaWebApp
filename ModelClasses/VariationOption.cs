@@ -12,12 +12,12 @@ namespace ModelClasses
 
         [ForeignKey("FK_variation_option_variation_id")]
         [Column("variation_id")]
-        public Variation VariationId { get; set; } = null!;
+        public int VariationId { get; set; } = default!;
 
         [Required]
         [Column("name")]
         public string Name { get; set; } = null!;
-        public ProductCategory Variation { get; set; } = null!;
+        public Variation Variation { get; set; } = null!;
     }
 
 }

@@ -12,13 +12,13 @@ namespace ModelClasses
 
         [ForeignKey("FK_variation_product_category_id")]
         [Column("product_category_id")]
-        public ProductCategory CategoryId { get; set; } = null!;
+        public int CategoryId { get; set; } = default!;
 
         [Required]
         [Column("name")]
         public string Name { get; set; } = null!;
         public ProductCategory Category { get; set; } = null!;
-        public ICollection<VariationOption> VariationOption { get; set; } = null!;
+        public ICollection<VariationOption> VariationOptions { get; set; } = null!;
     }
 
 }

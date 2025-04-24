@@ -12,7 +12,7 @@ namespace ModelClasses
 
         [ForeignKey("FK_product_product_category_id")]
         [Column("product_category_id")]
-        public ProductCategory CategoryId { get; set; } = null!;
+        public int CategoryId { get; set; } = default!;
 
         [Required]
         [Column("name")]
@@ -26,5 +26,4 @@ namespace ModelClasses
         public ProductCategory Category { get; set; } = null!;
         public ICollection<ProductItem> ProductItems { get; set; } = null!;
     }
-
 }
