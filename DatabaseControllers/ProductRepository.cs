@@ -1,25 +1,21 @@
 ﻿using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using ModelClasses;
+using System.Linq;
 
-namespace DatabaseControllers
+namespace AdminApp.DatabaseControllers
 {
-    public partial class ProductRepository
+    public partial class ProductRepository(AssortementSetupApplicationContext db)
     {
-        private readonly AssortementSetupApplicationContext db;
-
-        public ProductRepository()
-        {
-            db = new AssortementSetupApplicationContext();
-        }
-
-        public async Task<List<ProductCategory>> GetProductList()
+        public async Task<List<ProductCategory>> GetLinkedList()
         {
             var categories = await db.ProductCategories
                 .Include(c => c.Products)
                     .ThenInclude(p => p.ProductItems)
+                        .ThenInclude(pi => pi.Configurations)
                 .Include(c => c.Variations)
                     .ThenInclude(v => v.VariationOptions)
+                        .ThenInclude(pi => pi.Configurations)
                 .AsNoTracking()
                 .ToListAsync();
             return categories;
@@ -30,7 +26,7 @@ namespace DatabaseControllers
             await using var transaction = await db.Database.BeginTransactionAsync();
             try
             {
-                if (changes.CategoriesChanges != null)                
+                if (changes.CategoriesChanges != null)
                     await ApllyTableChanges(changes.CategoriesChanges);
 
                 if (changes.ProductChanges != null)
@@ -45,11 +41,14 @@ namespace DatabaseControllers
                 if (changes.VariationOptionChanges != null)
                     await ApllyTableChanges(changes.VariationOptionChanges);
 
+                if (changes.ProductConfigurationChanges != null)
+                    await ApllyTableChanges(changes.ProductConfigurationChanges);
+
 
                 await db.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync();
                 throw;
@@ -59,7 +58,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<ProductCategory> changes)
         {
             var removeList = changes.ToRemove;
-            await db.ProductCategories.Where(c => removeList.Contains(c)).ExecuteDeleteAsync();
+            await db.ProductCategories.Where(category => removeList.Contains(category)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;
@@ -71,7 +70,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<Product> changes)
         {
             var removeList = changes.ToRemove;
-            await db.Products.ForEachAsync(c => c.CategoryId = default);
+            await db.Products.Where(product => removeList.Contains(product)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;
@@ -83,7 +82,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<ProductItem> changes)
         {
             var removeList = changes.ToRemove;
-            await db.ProductItems.ForEachAsync(c => c.ProductId = default);
+            await db.ProductItems.Where(item => removeList.Contains(item)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;
@@ -94,7 +93,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<Variation> changes)
         {
             var removeList = changes.ToRemove;
-            await db.Variation.ForEachAsync(c => c.CategoryId = default);
+            await db.Variation.Where(variation => removeList.Contains(variation)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;
@@ -105,7 +104,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<VariationOption> changes)
         {
             var removeList = changes.ToRemove;
-            await db.VariationOption.ForEachAsync(c => c.VariationId = default);
+            await db.VariationOption.Where(option => removeList.Contains(option)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;
@@ -117,7 +116,7 @@ namespace DatabaseControllers
         private async Task ApllyTableChanges(TableChanges<ProductConfiguration> changes)
         {
             var removeList = changes.ToRemove;
-            await db.ProductConfiguration.ForEachAsync(c => c.ProductItemId = default);
+            await db.ProductConfiguration.Where(configuration => removeList.Contains(configuration)).ExecuteDeleteAsync();
 
             foreach (var update in changes.ToUpdate)
                 db.Entry(update).State = EntityState.Modified;

@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatabaseAccess\DatabaseAccess.csproj" />
+    <ProjectReference Include="..\DatabaseControllers\AdminApp.csproj" />
   </ItemGroup>
 
 </Project>

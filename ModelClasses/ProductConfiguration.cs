@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelClasses
 {
@@ -16,8 +15,6 @@ namespace ModelClasses
 
         // Навигационные свойства
         public ProductItem ProductItem { get; set; } = null!;
-        public VariationOption VariationOption { get; set; } = null!;
-
+        public VariationOption? VariationOption { get; set; }
     }
-
 }

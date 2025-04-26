@@ -1,4 +1,4 @@
-﻿namespace DatabaseControllers
+﻿namespace AdminApp.DatabaseControllers
 {
     public interface IRepository<T> where T : class
     {
