@@ -43,7 +43,7 @@ public class ProductInfoBuilder
             str.AppendLine($" {item.Price,-5}");
         }
     }
-
+    
     public override string ToString()
     {
         return str.ToString();
