@@ -18,6 +18,7 @@ namespace ModelClasses
         public decimal Price { get; set; } = default!;
 
         public Product Product { get; set; } = null!;
+        public ICollection<ProductConfiguration> Configurations { get; set; } = [];
     }
 }
 

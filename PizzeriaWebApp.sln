@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelClasses", "ModelClasse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{F49467A2-0994-4453-8900-5AC9230EADAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleView", "ConsoleView\ConsoleView.csproj", "{AB380682-BE48-463A-8DE7-F181937D0EDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleView", "ConsoleView\ConsoleView.csproj", "{AB380682-BE48-463A-8DE7-F181937D0EDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminApp", "DatabaseControllers\AdminApp.csproj", "{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{AB380682-BE48-463A-8DE7-F181937D0EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB380682-BE48-463A-8DE7-F181937D0EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB380682-BE48-463A-8DE7-F181937D0EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

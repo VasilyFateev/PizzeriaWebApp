@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DatabaseAccess.Migrations
 {
-    [DbContext(typeof(ApplicationContext))]
-    [Migration("20250424152356_Initial")]
+    [DbContext(typeof(AssortementSetupApplicationContext))]
+    [Migration("20250426040910_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -86,6 +86,10 @@ namespace DatabaseAccess.Migrations
                     b.Property<int>("VariationOptionId")
                         .HasColumnType("integer")
                         .HasColumnName("variation_option_id");
+
+                    b.HasKey("ProductItemId", "VariationOptionId");
+
+                    b.HasIndex("VariationOptionId");
 
                     b.ToTable("product_configuration");
                 });
@@ -174,9 +178,31 @@ namespace DatabaseAccess.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_product_product_category_id");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ModelClasses.ProductConfiguration", b =>
+                {
+                    b.HasOne("ModelClasses.ProductItem", "ProductItem")
+                        .WithMany("Configurations")
+                        .HasForeignKey("ProductItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_product_configuration_product_item_id");
+
+                    b.HasOne("ModelClasses.VariationOption", "VariationOption")
+                        .WithMany("Configurations")
+                        .HasForeignKey("VariationOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_product_configuration_variation_option_id");
+
+                    b.Navigation("ProductItem");
+
+                    b.Navigation("VariationOption");
                 });
 
             modelBuilder.Entity("ModelClasses.ProductItem", b =>
@@ -185,7 +211,8 @@ namespace DatabaseAccess.Migrations
                         .WithMany("ProductItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_product_item_product_id");
 
                     b.Navigation("Product");
                 });
@@ -193,10 +220,11 @@ namespace DatabaseAccess.Migrations
             modelBuilder.Entity("ModelClasses.Variation", b =>
                 {
                     b.HasOne("ModelClasses.ProductCategory", "Category")
-                        .WithMany()
+                        .WithMany("Variations")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_variation_product_category_id");
 
                     b.Navigation("Category");
                 });
@@ -207,7 +235,8 @@ namespace DatabaseAccess.Migrations
                         .WithMany("VariationOptions")
                         .HasForeignKey("VariationId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_variation_option_variation_id");
 
                     b.Navigation("Variation");
                 });
@@ -220,11 +249,23 @@ namespace DatabaseAccess.Migrations
             modelBuilder.Entity("ModelClasses.ProductCategory", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("Variations");
+                });
+
+            modelBuilder.Entity("ModelClasses.ProductItem", b =>
+                {
+                    b.Navigation("Configurations");
                 });
 
             modelBuilder.Entity("ModelClasses.Variation", b =>
                 {
                     b.Navigation("VariationOptions");
+                });
+
+            modelBuilder.Entity("ModelClasses.VariationOption", b =>
+                {
+                    b.Navigation("Configurations");
                 });
 #pragma warning restore 612, 618
         }

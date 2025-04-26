@@ -18,6 +18,8 @@ namespace ModelClasses
         [Column("name")]
         public string Name { get; set; } = null!;
         public Variation Variation { get; set; } = null!;
+
+        public ICollection<ProductConfiguration> Configurations { get; set; } = [];
     }
 
 }

@@ -1,8 +1,17 @@
 ﻿using DatabaseAccess;
 
-using (ApplicationContext db = new())
+using (AssortementSetupApplicationContext db = new())
 {
-    bool isCreated = db.Database.EnsureCreated();
-    if (isCreated) Console.WriteLine("The database has been created");
-    else Console.WriteLine("The database already exists");
+    bool isAvalaible = db.Database.CanConnect();
+    if (isAvalaible)
+    {
+        Console.WriteLine("The database is available");
+    }
+    else
+    {
+        Console.WriteLine("The database isn't available");
+        return;
+    }
 }
+
+Console.ReadLine();

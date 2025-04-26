@@ -25,17 +25,6 @@ namespace DatabaseAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "product_configuration",
-                columns: table => new
-                {
-                    product_item_id = table.Column<int>(type: "integer", nullable: false),
-                    variation_option_id = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                });
-
-            migrationBuilder.CreateTable(
                 name: "product",
                 columns: table => new
                 {
@@ -50,7 +39,7 @@ namespace DatabaseAccess.Migrations
                 {
                     table.PrimaryKey("PK_product", x => x.id);
                     table.ForeignKey(
-                        name: "FK_product_product_category_product_category_id",
+                        name: "FK_product_product_category_id",
                         column: x => x.product_category_id,
                         principalTable: "product_category",
                         principalColumn: "id",
@@ -70,7 +59,7 @@ namespace DatabaseAccess.Migrations
                 {
                     table.PrimaryKey("PK_variation", x => x.id);
                     table.ForeignKey(
-                        name: "FK_variation_product_category_product_category_id",
+                        name: "FK_variation_product_category_id",
                         column: x => x.product_category_id,
                         principalTable: "product_category",
                         principalColumn: "id",
@@ -91,7 +80,7 @@ namespace DatabaseAccess.Migrations
                 {
                     table.PrimaryKey("PK_product_item", x => x.id);
                     table.ForeignKey(
-                        name: "FK_product_item_product_product_id",
+                        name: "FK_product_item_product_id",
                         column: x => x.product_id,
                         principalTable: "product",
                         principalColumn: "id",
@@ -111,9 +100,33 @@ namespace DatabaseAccess.Migrations
                 {
                     table.PrimaryKey("PK_variation_option", x => x.id);
                     table.ForeignKey(
-                        name: "FK_variation_option_variation_variation_id",
+                        name: "FK_variation_option_variation_id",
                         column: x => x.variation_id,
                         principalTable: "variation",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "product_configuration",
+                columns: table => new
+                {
+                    product_item_id = table.Column<int>(type: "integer", nullable: false),
+                    variation_option_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_product_configuration", x => new { x.product_item_id, x.variation_option_id });
+                    table.ForeignKey(
+                        name: "FK_product_configuration_product_item_id",
+                        column: x => x.product_item_id,
+                        principalTable: "product_item",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_product_configuration_variation_option_id",
+                        column: x => x.variation_option_id,
+                        principalTable: "variation_option",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -122,6 +135,11 @@ namespace DatabaseAccess.Migrations
                 name: "IX_product_product_category_id",
                 table: "product",
                 column: "product_category_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_product_configuration_variation_option_id",
+                table: "product_configuration",
+                column: "variation_option_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_product_item_product_id",
