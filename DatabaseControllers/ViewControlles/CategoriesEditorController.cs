@@ -8,8 +8,8 @@ namespace AdminApp.ViewController
     {
         private readonly ProductCategory? category;
         private readonly TableChanges<ProductCategory> changes;
-        private readonly List<ProductCategory> categories;
-        public CategoriesEditorController(List<ProductCategory> categories, int categoryId, TableChanges<ProductCategory> changes)
+        private readonly IEnumerable<ProductCategory> categories;
+        public CategoriesEditorController(IEnumerable<ProductCategory> categories, int categoryId, TableChanges<ProductCategory> changes)
         {
             if (categoryId > 0)
             {
@@ -19,7 +19,6 @@ namespace AdminApp.ViewController
             }
             
             this.changes = changes;
-            changes ??= new();
             this.categories = categories;
         }
         public void NameEdit(string newValue)
@@ -28,7 +27,6 @@ namespace AdminApp.ViewController
             {
                 CheckUniquenessName(newValue);
                 category.Name = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(category);
             }
             
@@ -36,7 +34,6 @@ namespace AdminApp.ViewController
         public void Add(string name)
         {
             CheckUniquenessName(name);
-            changes.ToAdd ??= [];
             ProductCategory newCategory = new() { Name = name };
             changes.ToAdd.Add(newCategory);
         }
@@ -45,7 +42,6 @@ namespace AdminApp.ViewController
         {
             if (category != null)
             {
-                changes.ToRemove ??= [];
                 changes.ToRemove.Add(category);
             }
         }

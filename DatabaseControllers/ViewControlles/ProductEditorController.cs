@@ -8,8 +8,8 @@ namespace AdminApp.ViewController
     {
         private readonly Product? product;
         private readonly TableChanges<Product> changes;
-        private readonly List<ProductCategory> categories;
-        public ProductEditorController(List<ProductCategory> categories, int productId, TableChanges<Product> changes)
+        private readonly IEnumerable<ProductCategory> categories;
+        public ProductEditorController(IEnumerable<ProductCategory> categories, int productId, TableChanges<Product> changes)
         {
             if (productId > 0)
             {
@@ -19,7 +19,6 @@ namespace AdminApp.ViewController
                     ?? throw new NotFoundEntityByKeyException(productId, typeof(Product));
             }
             this.changes = changes;
-            changes ??= new();
             this.categories = categories;
         }
         public void NameEdit(string newValue)
@@ -28,7 +27,6 @@ namespace AdminApp.ViewController
             {
                 CheckUniquenessName(newValue);
                 product.Name = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(product);
             }
         }
@@ -38,7 +36,6 @@ namespace AdminApp.ViewController
             if (product != null)
             {
                 product.Description = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(product);
             }            
         }
@@ -49,7 +46,6 @@ namespace AdminApp.ViewController
                 ?? throw new NotFoundEntityByKeyException(categoryId, typeof(ProductCategory));
 
             CheckUniquenessName(name);
-            changes.ToAdd ??= [];
             Product newProduct = new() { CategoryId = category.Id, Name = name, ImageLink = imageLink, Description = description };
             changes.ToAdd.Add(newProduct);
         }
@@ -58,7 +54,6 @@ namespace AdminApp.ViewController
         {
             if (product != null)
             {
-                changes.ToRemove ??= [];
                 changes.ToRemove.Add(product);
             }
         }

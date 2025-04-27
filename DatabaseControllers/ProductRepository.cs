@@ -1,11 +1,10 @@
 ﻿using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using ModelClasses;
-using System.Linq;
 
 namespace AdminApp.DatabaseControllers
 {
-    public partial class ProductRepository(AssortementSetupApplicationContext db)
+    public class ProductRepository(AssortementSetupApplicationContext db)
     {
         public async Task<List<ProductCategory>> GetLinkedList()
         {

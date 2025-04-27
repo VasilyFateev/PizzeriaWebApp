@@ -8,8 +8,8 @@ namespace AdminApp.ViewController
     {
         private readonly VariationOption? option;
         private readonly TableChanges<VariationOption> changes;
-        private readonly List<ProductCategory> categories;
-        public VariationOptionEditorController(List<ProductCategory> categories, int variationOptionId, TableChanges<VariationOption> changes)
+        private readonly IEnumerable<ProductCategory> categories;
+        public VariationOptionEditorController(IEnumerable<ProductCategory> categories, int variationOptionId, TableChanges<VariationOption> changes)
         {
             if (variationOptionId > 0)
             {
@@ -20,7 +20,6 @@ namespace AdminApp.ViewController
                     ?? throw new NotFoundEntityByKeyException(variationOptionId, typeof(VariationOption));
             }
             this.changes = changes;
-            changes ??= new();
             this.categories = categories;
         }
         public void NameEdit(string newValue)
@@ -30,7 +29,6 @@ namespace AdminApp.ViewController
                 CheckUniquenessName(newValue);
 
                 option.Name = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(option);
             }
         }
@@ -50,7 +48,6 @@ namespace AdminApp.ViewController
         {
             if (option != null)
             {
-                changes.ToRemove ??= [];
                 changes.ToRemove.Add(option);
             }
         }

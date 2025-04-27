@@ -12,17 +12,6 @@ namespace DatabaseAccess
         public DbSet<VariationOption> VariationOption { get; set; }
         public DbSet<ProductConfiguration> ProductConfiguration { get; set; }
 
-        public AssortementSetupApplicationContext(DbSet<ProductCategory> productCategories, DbSet<Product> products,
-            DbSet<ProductItem> productItems, DbSet<Variation> variation, DbSet<VariationOption> variationOption,
-            DbSet<ProductConfiguration> productConfiguration)
-        {
-            ProductCategories = productCategories;
-            Products = products;
-            ProductItems = productItems;
-            Variation = variation;
-            VariationOption = variationOption;
-            ProductConfiguration = productConfiguration;
-        }
         public AssortementSetupApplicationContext()
         {
             Database.EnsureCreated();

@@ -8,8 +8,8 @@ namespace AdminApp.ViewController
     {
         private readonly Variation? variation;
         private readonly TableChanges<Variation> changes;
-        private readonly List<ProductCategory> categories;
-        public VariationEditorController(List<ProductCategory> categories, int varuationId, TableChanges<Variation> changes)
+        private readonly IEnumerable<ProductCategory> categories;
+        public VariationEditorController(IEnumerable<ProductCategory> categories, int varuationId, TableChanges<Variation> changes)
         {
             if (varuationId > 0)
             {
@@ -20,7 +20,6 @@ namespace AdminApp.ViewController
             }
             
             this.changes = changes;
-            changes ??= new();
             this.categories = categories;
         }
         public void NameEdit(string newValue)
@@ -30,7 +29,6 @@ namespace AdminApp.ViewController
                 CheckUniquenessName(newValue);
 
                 variation.Name = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(variation);
             }
         }
@@ -42,7 +40,6 @@ namespace AdminApp.ViewController
                 ?? throw new NotFoundEntityByKeyException(categoryId, typeof(ProductCategory));
 
             CheckUniquenessName(name);
-            changes.ToAdd ??= [];
             Variation newVariation = new() { CategoryId = category.Id, Name = name};
             changes.ToAdd.Add(newVariation);
         }
@@ -51,7 +48,6 @@ namespace AdminApp.ViewController
         {
             if (variation != null)
             {
-                changes.ToRemove ??= [];
                 changes.ToRemove.Add(variation);
             }
         }

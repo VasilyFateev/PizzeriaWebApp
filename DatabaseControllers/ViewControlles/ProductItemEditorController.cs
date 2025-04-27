@@ -8,8 +8,8 @@ namespace AdminApp.ViewController
     {
         private readonly ProductItem? productItem;
         private readonly TableChanges<ProductItem> changes;
-        private readonly List<ProductCategory> categories;
-        public ProductItemEditorController(List<ProductCategory> categories, int productItemId, TableChanges<ProductItem> changes)
+        private readonly IEnumerable<ProductCategory> categories;
+        public ProductItemEditorController(IEnumerable<ProductCategory> categories, int productItemId, TableChanges<ProductItem> changes)
         {
             if (productItemId > 0)
             {
@@ -19,7 +19,6 @@ namespace AdminApp.ViewController
                     ?? throw new NotFoundEntityByKeyException(productItemId, typeof(ProductItem));
             }
             this.changes = changes;
-            changes ??= new();
             this.categories = categories;
         }
 
@@ -28,7 +27,6 @@ namespace AdminApp.ViewController
             if (productItem != null)
             {
                 productItem.Price = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(productItem);
             }           
         }
@@ -38,7 +36,6 @@ namespace AdminApp.ViewController
             if (productItem != null)
             {
                 productItem.CookingTime = newValue;
-                changes.ToUpdate ??= [];
                 changes.ToUpdate.Add(productItem);
             }
 
@@ -50,7 +47,6 @@ namespace AdminApp.ViewController
                 .FirstOrDefault(p => p.Id == productId)
                 ?? throw new NotFoundEntityByKeyException(productId, typeof(Product));
 
-            changes.ToAdd ??= [];
             ProductItem newProductItem = new() { ProductId = product.Id, Price = price, CookingTime = cookingTime };
             changes.ToAdd.Add(newProductItem);
         }
@@ -59,7 +55,6 @@ namespace AdminApp.ViewController
         {
             if (productItem != null)
             {
-                changes.ToRemove ??= [];
                 changes.ToRemove.Add(productItem);
             }
         }
