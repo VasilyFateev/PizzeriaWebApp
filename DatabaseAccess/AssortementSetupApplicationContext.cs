@@ -12,6 +12,10 @@ namespace DatabaseAccess
         public DbSet<VariationOption> VariationOption { get; set; }
         public DbSet<ProductConfiguration> ProductConfiguration { get; set; }
 
+        public AssortementSetupApplicationContext(DbContextOptions<AssortementSetupApplicationContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
         public AssortementSetupApplicationContext()
         {
             Database.EnsureCreated();

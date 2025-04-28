@@ -1,0 +1,47 @@
+﻿@model AssortmentListViewModel
+@{
+    ViewData["Title"] = "Список ассортимента";
+}
+
+@foreach (var category in Model.CategoryListElements)
+{
+    <h2>@category.CategoryID | @category.CategoryName</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Вариации</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in category.ProductsList)
+            {
+                <tr>
+                    <td>@product.ProductID</td>
+                    <td>@product.ProductName</td>
+                    <td>
+                        @foreach (var variation in product.VariationList)
+                        {
+                            <div>@variation.VariationName</div>
+                            <div>
+                                @foreach (var option in variation.OptionsList)
+                                {
+                                    @if (option.Status)
+                                    {
+                                        <span class="text-success">[+] @option.VariationOptionName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">[-] @option.VariationOptionName</span>
+                                    }
+                                    <br />
+                                }
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
