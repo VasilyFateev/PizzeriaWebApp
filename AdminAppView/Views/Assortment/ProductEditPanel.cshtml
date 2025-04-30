@@ -1,0 +1,112 @@
+﻿@model ProductEditorViewModel
+@{
+	ViewData["Title"] = "Редактирование товарной единицы";
+}
+
+<form id="productForm" asp-action="SaveAllChanges" asp-route-id="@Model.Product.Id" method="post">
+	@Html.AntiForgeryToken()
+	<h2>@Model.Product.Id | <input id="productName" value="@Model.Product.Name" required></h2>
+
+	<h3>Configuratiions</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				@foreach (var variation in Model.Product.VariationList)
+				{
+					<th>
+						@variation.Name
+					</th>
+				}
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Product.ItemsList)
+			{
+				<tr>
+					<td>@item.Id</td>
+
+					@foreach (var variation in Model.Product.VariationList)
+					{
+						var currentOption = item.Options.First(op => variation.OptionsList.Any(op1 => op1.Name == op.Name)).Name;
+						<td>
+							<select required>
+								@foreach (var option in variation.OptionsList)
+								{
+									<option value=@option.Name selected="@(currentOption == option.Name)">@option.Name</option>
+								}
+							</select>
+						</td>
+					}
+					<td>
+						<input id="name" value="@item.Price" required>
+					</td>
+					<td>
+						<button class="btn btn-danger btn-sm" onclick="deleteProductItem(@item.Id)">Delete</button>
+					</td>
+				</tr>
+			}
+			<tr>
+
+				<a asp-action="AddProductItem" asp-route-id="@Model.Product.Id" class="btn btn-danger">Add</a>
+			</tr>
+		</tbody>
+	</table>
+	<button class="btn btn-primary btn-sm" onclick="SaveAllChanges()">Save</button>
+</form>
+
+@section Scripts {
+	<script>
+		async function deleteProductItem(id) {
+			if (!confirm("Delete configuration?")) return;
+
+			try {
+				const response = await fetch(`/Assortment/DeleteProductItem?id=${id}`, {
+					method: "POST",
+					headers: {
+						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+					}
+				});
+
+				if (response.ok) {
+					alert("Configuration deleted successfully!");
+					location.reload();
+				}
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+	</script>
+
+	<script>
+		async function SaveProductItem(name, options[]) {
+			if (!confirm("Save configuration?")) return;
+
+			try {
+				const response = await fetch(`/Assortment/AddProductItem?id=${id}&`, {
+					method: "POST",
+					headers: {
+						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+					}
+				});
+
+				if (response.ok) {
+					alert("Configuration deleted successfully!");
+					location.reload();
+				}
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+	</script>
+
+	<script>
+		async function SaveAllChanges()
+		{
+
+		}
+	</script>
+}

@@ -1,47 +1,80 @@
 ﻿@model AssortmentListViewModel
 @{
-    ViewData["Title"] = "Список ассортимента";
+	ViewData["Title"] = "Список ассортимента";
 }
 
 @foreach (var category in Model.CategoryListElements)
 {
-    <h2>@category.CategoryID | @category.CategoryName</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Вариации</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in category.ProductsList)
-            {
-                <tr>
-                    <td>@product.ProductID</td>
-                    <td>@product.ProductName</td>
-                    <td>
-                        @foreach (var variation in product.VariationList)
-                        {
-                            <div>@variation.VariationName</div>
-                            <div>
-                                @foreach (var option in variation.OptionsList)
-                                {
-                                    @if (option.Status)
-                                    {
-                                        <span class="text-success">[+] @option.VariationOptionName</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-danger">[-] @option.VariationOptionName</span>
-                                    }
-                                    <br />
-                                }
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	@Html.AntiForgeryToken()
+	<h2>@category.Id | @category.CategoryName</h2>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Название</th>
+				<th>Вариации</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var product in category.ProductsList)
+			{
+				<tr>
+					<td>@product.Id</td>
+					<td>@product.Name</td>
+					@foreach (var variation in product.VariationList)
+					{
+						<td>
+							<div>@variation.Name</div>
+							<div>
+								@foreach (var option in variation.OptionsList)
+								{
+									@if (option.Status)
+									{
+										<span class="text-success">[+] @option.Name</span>
+									}
+									else
+									{
+										<span class="text-danger">[-] @option.Name</span>
+									}
+									<br />
+								}
+							</div>
+						</td>
+					}
+					<td>
+						<a asp-action="ProductEditPanel" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
+						<button class="btn btn-danger btn-sm" onclick="deleteProduct(@product.Id)">Delete</button>
+					</td>
+				</tr>
+			}
+			<tr>
+				@* <a asp-action="ProductEditPanel" asp-route-id="@product" class="btn btn-primary">Редактировать</a> *@
+			</tr>
+		</tbody>
+	</table>
+}
+
+@section Scripts {
+	<script>
+		async function deleteProduct(id) {
+			if (!confirm("Delete product?")) return;
+
+			try {
+				const response = await fetch(`/Assortment/DeleteProduct?id=${id}`, {
+					method: "POST",
+					headers: {
+						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+					}
+				});
+
+				if (response.ok) {
+					alert("Product deleted successfully!");
+					location.reload();
+				}
+			} 
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+	</script>
 }

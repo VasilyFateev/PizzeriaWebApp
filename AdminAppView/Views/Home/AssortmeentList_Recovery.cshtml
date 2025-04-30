@@ -7,7 +7,7 @@
 	@foreach (var category in Model.CategoryListElements)
 	{
 		<tr>
-			<h2>@category.CategoryID | @category.CategoryName</h2>
+			<h2>@category.Id | @category.CategoryName</h2>
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -20,13 +20,13 @@
 					@foreach (var product in category.ProductsList)
 					{
 						<tr>
-							<td>@product.ProductID</td>
-							<td>@product.ProductName</td>
+							<td>@product.Id</td>
+							<td>@product.Name</td>
 							<table>
 								@foreach (var variation in product.VariationList)
 								{
 									<tr>
-										<td>@variation.VariationName</td>
+										<td>@variation.Name</td>
 										<td>
 											<table>
 												@foreach (var option in variation.OptionsList)
@@ -39,7 +39,7 @@
 													{
 														<td>[-]</td>
 													}
-													<td>@option.VariationOptionName</td>
+													<td>@option.Name</td>
 												}
 											</table>
 										</td>

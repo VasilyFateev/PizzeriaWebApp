@@ -10,7 +10,7 @@ using (AssortementSetupApplicationContext db = new())
 
     if (isAvalaible)
     {
-        var controllers = new ProductRepository(db);
+        var controllers = new DatabaseController(db);
         var categories = await controllers.GetLinkedList();
         AssortimentDatabaseChanges changes = new();
         SendWarnningMessage("The database is available");
@@ -86,7 +86,7 @@ using (AssortementSetupApplicationContext db = new())
                     case "SaveChanges":
                         {
                             await controllers.UpdateAssortimentData(changes);
-                            controllers = new ProductRepository(db);
+                            controllers = new DatabaseController(db);
                             categories = await controllers.GetLinkedList();
                             SendDoneMessage("Changes has been saved");
                         }

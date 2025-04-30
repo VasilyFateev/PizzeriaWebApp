@@ -25,4 +25,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Assortment}/{action=AssortmentList}/");
 
+//app.Map("/product", ProductEditPanel);
+
 app.Run();

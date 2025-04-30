@@ -4,7 +4,7 @@ using ModelClasses;
 
 namespace AdminApp.DatabaseControllers
 {
-    public class ProductRepository(AssortementSetupApplicationContext db)
+    public class DatabaseController(AssortementSetupApplicationContext db)
     {
         public async Task<List<ProductCategory>> GetLinkedList()
         {
