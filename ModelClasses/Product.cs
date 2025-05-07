@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelClasses
 {
     [Table("product")]
-    public class Product
-    {
+    public class Product : Interfaces.IHasPrimaryKey, Interfaces.IHasUniqueName
+	{
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -26,5 +25,9 @@ namespace ModelClasses
         public string ImageLink { get; set; } = null!;
         public ProductCategory Category { get; set; } = null!;
         public ICollection<ProductItem> ProductItems { get; set; } = null!;
-    }
+
+        public int GetPrimaryKey() => Id;
+        public string GetUniqueName() => Name;
+	}
+
 }

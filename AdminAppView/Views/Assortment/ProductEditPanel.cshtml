@@ -1,77 +1,146 @@
-﻿@model ProductEditorViewModel
+﻿@model ProductEditRequestVM
 @{
 	ViewData["Title"] = "Редактирование товарной единицы";
 }
 
-<form id="productForm" asp-action="SaveAllChanges" asp-route-id="@Model.Product.Id" method="post">
+<form id="productForm">
 	@Html.AntiForgeryToken()
-	<h2>@Model.Product.Id | <input id="productName" value="@Model.Product.Name" required></h2>
+	<h2>@Model.Id | <input type="text" data-product-name value="@Model.Name" required /></h2>
+	<input type="hidden" data-product-id value="@Model.Id" />
+	<input type="text" data-product-description value="@Model.Description" required />
 
-	<h3>Configuratiions</h3>
+
+	<h3>Configurations</h3>
 	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th>ID</th>
-				@foreach (var variation in Model.Product.VariationList)
+				@foreach (var variation in Model.CategoryVariations)
 				{
-					<th>
-						@variation.Name
-					</th>
+					<th data-variation-id="@variation.Id">@variation.Name</th>
 				}
+				<th>Cooking Time</th>
 				<th>Price</th>
+				<th>Action</th>
 			</tr>
 		</thead>
-		<tbody>
-			@foreach (var item in Model.Product.ItemsList)
+		<tbody id="itemsTableBody">
+			@for (var i = 0; i < Model.ProductItems.Length; i++)
 			{
-				<tr>
+				var item = Model.ProductItems[i];
+				<tr data-item data-item-id="@item.Id">
 					<td>@item.Id</td>
 
-					@foreach (var variation in Model.Product.VariationList)
+					@for (var j = 0; j < Model.CategoryVariations.Length; j++)
 					{
-						var currentOption = item.Options.First(op => variation.OptionsList.Any(op1 => op1.Name == op.Name)).Name;
+						var variation = Model.CategoryVariations[j];
+						var selectedOption = variation.VariationOptions
+						.FirstOrDefault(option => item.Configurations
+						.Any(conf => conf.OptionId == option.Id));
+
 						<td>
-							<select required>
-								@foreach (var option in variation.OptionsList)
+							<select class="form-control" data-option required>
+								@foreach (var option in variation.VariationOptions)
 								{
-									<option value=@option.Name selected="@(currentOption == option.Name)">@option.Name</option>
+									<option value="@option.Id" selected="@(selectedOption?.Id == option.Id)">
+										@option.Name
+									</option>
 								}
 							</select>
 						</td>
 					}
 					<td>
-						<input id="name" value="@item.Price" required>
+						<input type="number" class="form-control" data-cooking-time value="@item.CookingTime" required />
 					</td>
 					<td>
-						<button class="btn btn-danger btn-sm" onclick="deleteProductItem(@item.Id)">Delete</button>
+						<input type="number" step="0.01" class="form-control" data-price value="@item.Price" required />
+					</td>
+					<td>
+						<button type="button" class="btn btn-danger btn-sm" onclick="deleteProductItem(this)">Delete</button>
 					</td>
 				</tr>
 			}
 			<tr>
-
-				<a asp-action="AddProductItem" asp-route-id="@Model.Product.Id" class="btn btn-danger">Add</a>
-			</tr>
+				<button type="button" class="btn btn-success btn-sm" onclick="addProductItem()">Add Item</button>
+				</tr>
 		</tbody>
 	</table>
-	<button class="btn btn-primary btn-sm" onclick="SaveAllChanges()">Save</button>
+
+	<button type="button" class="btn btn-primary btn-sm" onclick="saveChanges()">Save</button>
+	<a asp-action="AssortmentList" class="btn btn-primary btn-sm">Cancel</a>
 </form>
 
 @section Scripts {
-	<script>
-		async function deleteProductItem(id) {
-			if (!confirm("Delete configuration?")) return;
 
-			try {
-				const response = await fetch(`/Assortment/DeleteProductItem?id=${id}`, {
-					method: "POST",
-					headers: {
-						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
-					}
+	<script>
+		async function saveChanges() {
+			if (!confirm("Save changes?")) return;
+
+			const productId = parseInt(document.querySelector('[data-product-id]').value);
+			const productName = document.querySelector('[data-product-name]').value;
+			const productDescription = document.querySelector('[data-product-description]').value;
+
+			const items = [];
+			document.querySelectorAll('[data-item]').forEach(row => {
+				const itemId = parseInt(row.getAttribute('data-item-id'));
+				const price = parseInt(row.querySelector('[data-price]').value) || 0;
+				const cookingTime = parseInt(row.querySelector('[data-cooking-time]').value) || 0;
+
+				const configuration = [];
+				row.querySelectorAll('[data-option]').forEach(select => {
+					const optionId = parseInt(select.value);
+
+					configuration.push({
+						ItemId: itemId,
+						OptionId: optionId
+					});
 				});
 
-				if (response.ok) {
-					alert("Configuration deleted successfully!");
-					location.reload();
+				items.push({
+					Id: itemId,
+					Price: price,
+					CookingTime: cookingTime,
+					Configurations: configuration
+				});
+			});
+
+			const model = {
+				Id: productId,
+				Name: productName,
+				Description: productDescription,
+				ProductItems: items
+			};
+
+			fetch('/Assortment/UpdateProduct', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+				},
+				body: JSON.stringify(model)
+			})
+				.then(response => {
+					if (response.ok) {
+						alert('Product updated successfully!');
+						location.reload();
+					} else {
+						alert('Error updating product');
+					}
+				})
+				.catch(error => {
+					console.error('Fetch error:', error);
+					alert('Unexpected error occurred');
+				});
+		}
+	</script>
+
+	<script>
+		async function deleteProductItem(btn) {
+			try {
+				const row = btn.closest("tr");
+				if (row) 
+				{
+					row.remove();
 				}
 			}
 			catch (error) {
@@ -81,32 +150,75 @@
 	</script>
 
 	<script>
-		async function SaveProductItem(name, options[]) {
-			if (!confirm("Save configuration?")) return;
-
+		async function addProductItem() {
 			try {
-				const response = await fetch(`/Assortment/AddProductItem?id=${id}&`, {
-					method: "POST",
-					headers: {
-						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+				const tableBody = document.getElementById('itemsTableBody');
+				const newRow = document.createElement('tr');
+				newRow.setAttribute('data-item', '');
+				newRow.setAttribute('data-item-id', 0);
+
+				const idCell = document.createElement('td');
+				idCell.textContent = 'New';
+				newRow.appendChild(idCell);
+
+				const variations = @Json.Serialize(Model.CategoryVariations);
+				variations.forEach(variation => {
+					const cell = document.createElement('td');
+					const select = document.createElement('select');
+					select.className = 'form-control';
+					select.setAttribute('data-option', '');
+					select.required = true;
+
+					variation.variationOptions.forEach(option => {
+						const opt = document.createElement('option');
+						opt.value = option.id;
+						opt.textContent = option.name;
+						select.appendChild(opt);
+					});
+
+					if (variation.variationOptions.length > 0) {
+						select.value = variation.variationOptions[0].id;
 					}
+
+					cell.appendChild(select);
+					newRow.appendChild(cell);
 				});
 
-				if (response.ok) {
-					alert("Configuration deleted successfully!");
-					location.reload();
-				}
+				const timeCell = document.createElement('td');
+				const timeInput = document.createElement('input');
+				timeInput.type = 'number';
+				timeInput.className = 'form-control';
+				timeInput.setAttribute('data-cooking-time', '');
+				timeInput.value = '0';
+				timeInput.required = true;
+				timeCell.appendChild(timeInput);
+				newRow.appendChild(timeCell);
+
+				const priceCell = document.createElement('td');
+				const priceInput = document.createElement('input');
+				priceInput.type = 'number';
+				priceInput.step = '0.01';
+				priceInput.className = 'form-control';
+				priceInput.setAttribute('data-price', '');
+				priceInput.value = '0';
+				priceInput.required = true;
+				priceCell.appendChild(priceInput);
+				newRow.appendChild(priceCell);
+
+				const actionCell = document.createElement('td');
+				const deleteBtn = document.createElement('button');
+				deleteBtn.type = 'button';
+				deleteBtn.className = 'btn btn-danger btn-sm';
+				deleteBtn.textContent = 'Delete';
+				deleteBtn.onclick = function () { deleteProductItem(this); };
+				actionCell.appendChild(deleteBtn);
+				newRow.appendChild(actionCell);
+
+				tableBody.appendChild(newRow);
 			}
 			catch (error) {
 				alert("Error: " + error.message);
 			}
-		}
-	</script>
-
-	<script>
-		async function SaveAllChanges()
-		{
-
 		}
 	</script>
 }

@@ -1,126 +1,160 @@
 ﻿using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using ModelClasses;
+using ModelClasses.Interfaces;
 
 namespace AdminApp.DatabaseControllers
 {
-    public class DatabaseController(AssortementSetupApplicationContext db)
-    {
-        public async Task<List<ProductCategory>> GetLinkedList()
-        {
-            var categories = await db.ProductCategories
-                .Include(c => c.Products)
-                    .ThenInclude(p => p.ProductItems)
-                        .ThenInclude(pi => pi.Configurations)
-                .Include(c => c.Variations)
-                    .ThenInclude(v => v.VariationOptions)
-                        .ThenInclude(pi => pi.Configurations)
-                .AsNoTracking()
-                .ToListAsync();
-            return categories;
-        }
+	public class DatabaseController(AssortementSetupApplicationContext db)
+	{
+		public async Task<List<ProductCategory>> GetLinkedList()
+		{
+			var categories = await db.ProductCategories
+				.Include(c => c.Products)
+					.ThenInclude(p => p.ProductItems)
+						.ThenInclude(pi => pi.Configurations)
+				.Include(c => c.Variations)
+					.ThenInclude(v => v.VariationOptions)
+						.ThenInclude(pi => pi.Configurations)
+				.AsNoTracking()
+				.ToListAsync();
+			return categories;
+		}
+		public async Task<Product?> GetProduct(int id)
+		{
+			Product? product = await db.Products
+				.Where(product => product.Id == id)
+				.Include(product => product.Category)
+					.ThenInclude(category => category.Variations)
+						.ThenInclude(variation => variation.VariationOptions)
+				.Include(product => product.ProductItems)
+					.ThenInclude(item => item.Configurations)
+				.FirstOrDefaultAsync();
+			return product;
+		}
 
-        public async Task UpdateAssortimentData(AssortimentDatabaseChanges changes)
-        {
-            await using var transaction = await db.Database.BeginTransactionAsync();
-            try
-            {
-                if (changes.CategoriesChanges != null)
-                    await ApllyTableChanges(changes.CategoriesChanges);
+		public async Task<ProductCategory?> GetCategory(int id)
+		{
+			ProductCategory? category = await db.ProductCategories
+				.Where(category => category.Id == id)
+				.Include(category => category.Products)
+				.Include(category => category.Variations)
+					.ThenInclude(variation => variation.VariationOptions)
+				.FirstOrDefaultAsync();
+			return category;
+		}
 
-                if (changes.ProductChanges != null)
-                    await ApllyTableChanges(changes.ProductChanges);
+		public async Task UpdateAssortimentData(AssortimentDatabaseChanges changes)
+		{
+			await using var transaction = await db.Database.BeginTransactionAsync();
+			try
+			{
+				if (changes.CategoriesChanges != null)
+				{
+					await ApplyTableChanges(changes.CategoriesChanges, db.ProductCategories);
+					await db.SaveChangesAsync();
+				}
 
-                if (changes.ProductItemChanges != null)
-                    await ApllyTableChanges(changes.ProductItemChanges);
+				if (changes.ProductChanges != null)
+				{
+					await ApplyTableChanges(changes.ProductChanges, db.Products);
+					await db.SaveChangesAsync();
+				}
 
-                if (changes.VariationChanges != null)
-                    await ApllyTableChanges(changes.VariationChanges);
+				if (changes.ProductItemChanges != null)
+				{
+					await ApplyTableChanges(changes.ProductItemChanges, db.ProductItems);
+					await db.SaveChangesAsync();
+				}
 
-                if (changes.VariationOptionChanges != null)
-                    await ApllyTableChanges(changes.VariationOptionChanges);
+				if (changes.VariationChanges != null)
+				{
+					await ApplyTableChanges(changes.VariationChanges, db.Variation);
+					await db.SaveChangesAsync();
+				}
 
-                if (changes.ProductConfigurationChanges != null)
-                    await ApllyTableChanges(changes.ProductConfigurationChanges);
+				if (changes.VariationOptionChanges != null)
+				{
+					await ApplyTableChanges(changes.VariationOptionChanges, db.VariationOption);
+					await db.SaveChangesAsync();
+				}
 
+				if (changes.ProductConfigurationChanges != null)
+					await ApplyTableChanges(changes.ProductConfigurationChanges);
 
-                await db.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
-        }
+				await db.SaveChangesAsync();
+				await transaction.CommitAsync();
+			}
+			catch (Exception)
+			{
+				await transaction.RollbackAsync();
+				throw;
+			}
+		}
+		private async Task ApplyTableChanges<T>(TableChanges<T> changes, DbSet<T> dbSet) where T : class, IHasPrimaryKey
+		{
+			var removeList = changes.ToRemove;
+			await dbSet.Where(category => removeList.Contains(category)).ExecuteDeleteAsync();
 
-        private async Task ApllyTableChanges(TableChanges<ProductCategory> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.ProductCategories.Where(category => removeList.Contains(category)).ExecuteDeleteAsync();
+			for (int i = 0; i < changes.ToUpdate.Count; i++)
+			{
+				var updatedItem = changes.ToUpdate[i];
+				if (updatedItem == null) continue;
 
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
+				var existingItem = dbSet.Find(updatedItem.GetPrimaryKey());
+				if (existingItem != null)
+				{
+					db.Entry(existingItem).CurrentValues.SetValues(updatedItem);
+				}
+			}
 
-            var addList = changes.ToAdd.Where(c => db.ProductCategories.FirstOrDefault(x => x.Name == c.Name) == null);
-            await db.ProductCategories.AddRangeAsync(addList);
-        }
+			var addList = changes.ToAdd
+				.Where(c => c is not IHasUniqueName CategoryWithUniqueName ||
+					dbSet.FirstOrDefault(x => (x as IHasUniqueName)
+					.GetUniqueName() == CategoryWithUniqueName.GetUniqueName()) == null);
 
-        private async Task ApllyTableChanges(TableChanges<Product> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.Products.Where(product => removeList.Contains(product)).ExecuteDeleteAsync();
+			await dbSet.AddRangeAsync(changes.ToAdd);
+		}
 
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
+		private async Task ApplyTableChanges(TableChanges<ProductConfiguration> changes)
+		{
+			if (changes.ToRemove.Count > 0)
+			{
+				var query = db.ProductConfiguration.AsQueryable();
+				foreach (var item in changes.ToRemove.Where(x => x != null))
+				{
+					query = query.Where(x => x.ProductItemId == item.ProductItemId && x.VariationOptionId == item.VariationOptionId);
+				}
+				await query.ExecuteDeleteAsync();
+			}
 
-            var addList = changes.ToAdd.Where(c => db.ProductCategories.FirstOrDefault(x => x.Name == c.Name) == null);
-            await db.Products.AddRangeAsync(addList);
-        }
+			foreach (var updatedItem in changes.ToUpdate.Where(x => x != null))
+			{
+				var existingItem = await db.ProductConfiguration
+					.FirstOrDefaultAsync(x => x.ProductItemId == updatedItem.ProductItemId && x.VariationOptionId == updatedItem.VariationOptionId);
 
-        private async Task ApllyTableChanges(TableChanges<ProductItem> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.ProductItems.Where(item => removeList.Contains(item)).ExecuteDeleteAsync();
+				if (existingItem != null)
+				{
+					db.Entry(existingItem).CurrentValues.SetValues(updatedItem);
+				}
+			}
 
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
+			if (changes.ToAdd.Count > 0)
+			{
+				var validToAdd = new List<ProductConfiguration>();
+				foreach (var item in changes.ToAdd)
+				{
+					var productItemExists = await db.ProductItems.AnyAsync(x => x.Id == item.ProductItemId);
+					var optionExists = await db.VariationOption.AnyAsync(x => x.Id == item.VariationOptionId);
 
-            await db.ProductItems.AddRangeAsync(changes.ToAdd);
-        }
+					if (productItemExists && optionExists)
+					{
+						validToAdd.Add(item);
+					}
+				}
 
-        private async Task ApllyTableChanges(TableChanges<Variation> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.Variation.Where(variation => removeList.Contains(variation)).ExecuteDeleteAsync();
-
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
-
-            var addList = changes.ToAdd.Where(c => db.Variation.FirstOrDefault(x => x.Name == c.Name) == null);
-            await db.Variation.AddRangeAsync(addList);
-        }
-        private async Task ApllyTableChanges(TableChanges<VariationOption> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.VariationOption.Where(option => removeList.Contains(option)).ExecuteDeleteAsync();
-
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
-
-            var addList = changes.ToAdd.Where(c => db.VariationOption.FirstOrDefault(x => x.Name == c.Name) == null);
-            await db.VariationOption.AddRangeAsync(addList);
-        }
-
-        private async Task ApllyTableChanges(TableChanges<ProductConfiguration> changes)
-        {
-            var removeList = changes.ToRemove;
-            await db.ProductConfiguration.Where(configuration => removeList.Contains(configuration)).ExecuteDeleteAsync();
-
-            foreach (var update in changes.ToUpdate)
-                db.Entry(update).State = EntityState.Modified;
-
-            await db.ProductConfiguration.AddRangeAsync(changes.ToAdd);
-        }
-    }
+				await db.ProductConfiguration.AddRangeAsync(validToAdd);
+			}
+		}
+	}
 }

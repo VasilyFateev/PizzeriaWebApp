@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ModelClasses
 {
     [Table("variation")]
-    public class Variation
+    public class Variation : Interfaces.IHasPrimaryKey, Interfaces.IHasUniqueName
     {
         [Key]
         [Column("id")]
@@ -19,6 +19,7 @@ namespace ModelClasses
         public string Name { get; set; } = null!;
         public ProductCategory Category { get; set; } = null!;
         public ICollection<VariationOption> VariationOptions { get; set; } = null!;
-    }
-
+		public int GetPrimaryKey() => Id;
+		public string GetUniqueName() => Name;
+	}
 }

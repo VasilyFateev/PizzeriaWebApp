@@ -15,16 +15,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
-
+app.UseAuthorization(); 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Assortment}/{action=AssortmentList}/");
 
-//app.Map("/product", ProductEditPanel);
-
+app.MapDefaultControllerRoute();
 app.Run();

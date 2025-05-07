@@ -1,0 +1,374 @@
+﻿@model CategoryEditRequestResponceVM
+@{
+	ViewData["Title"] = "Редактирование категории";
+}
+
+<form id="categoryEditForm">
+	@Html.AntiForgeryToken()
+	<h2>@Model.Id | <input type="text" data-category-name value="@Model.Name" required /></h2>
+	<input type="hidden" data-category-id value="@Model.Id" />
+
+
+	<h3>Variations</h3>
+	<button type="button" class="btn btn-success btn-sm" onclick="onAddVariationButtonClick()">Add</button>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Options</th>
+			</tr>
+		</thead>
+		<tbody id="variationsTableBody">
+			@for (int i = 0; i < Model.Variations.Length; i++)
+			{
+				var variation = Model.Variations[i];
+				<tr data-variation>
+					<input type="hidden" data-variation-id value="@variation.Id" />
+					<td>@variation.Id</td>
+					<td>
+						<input type="text" data-variation-name value="@variation.Name" required />
+					</td>
+					<td>
+						<table>
+							<tr data-list-option>
+								<td>
+									<button type="button" class="btn btn-success btn-sm" onclick="onAddOptionButtonClick(this)">+</button>
+								</td>
+								@for (int j = 0; j < variation.Options.Length; j++)
+								{
+									var option = variation.Options[j];
+									<td data-option>
+										<input type="hidden" data-option-id value="@option.Id" />
+										<table>
+											<td>
+												<input type="text" data-option-name value="@option.Name" required />
+											</td>
+											<td>
+												<button type="button" class="btn btn-danger btn-sm" onclick="removeVariationOption(this)">X</button>
+											</td>
+										</table>
+									</td>
+								}
+							</tr>
+						</table>
+					</td>
+					<td>
+						<button type="button" class="btn btn-danger btn-sm" onclick="removeVariation(this)">Delete</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<br />
+	<h3>Products</h3>
+	<button type="button" class="btn btn-success btn-sm" onclick="onAddProductButtonClick()">Add</button>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody id="productTableBody">
+			@for (int i = 0; i < Model.Products.Length; i++)
+			{
+				var product = Model.Products[i];
+				<tr data-product>
+					<input type="hidden" data-product-id value="@product.Id" />
+					<td>@product.Id</td>
+					<td>
+						<input type="text" data-product-name value="@product.Name" required />
+					</td>
+					<td>
+						<a asp-action="ProductEditPanel" asp-controller="Assortment" asp-route-id="@product.Id" class="btn btn-primary btn-sm">Edit</a>
+					</td>
+					<td>
+						<button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(this)">Delete</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<button type="button" class="btn btn-primary btn-sm" onclick="saveChanges()">Save</button>
+	<a asp-action="AssortmentList" class="btn btn-primary btn-sm">Cancel</a>
+</form>
+
+@section scripts {
+	<script>
+		async function saveChanges() {
+			if (!confirm("Save changes?")) return;
+			const categoryId = parseInt(document.querySelector('[data-category-id]').value);
+			const categoryName = document.querySelector('[data-category-name]').value;
+			
+			const products = [];
+			document.querySelectorAll('[data-product]').forEach(product => {
+				const productId = parseInt(product.querySelector('[data-product-id]').value);
+				const productName = product.querySelector('[data-product-name]').value;
+				products.push({
+					Id: productId,
+					Name: productName
+				});
+			});
+			const variations = [];
+			document.querySelectorAll('[data-variation]').forEach(variation => {
+				const variationId = parseInt(variation.querySelector('[data-variation-id]').value);
+				const variationName = variation.querySelector('[data-variation-name]').value;
+				const options = [];
+				
+				variation.querySelectorAll('[data-option]').forEach(option => {
+					const optionId = parseInt(option.querySelector('[data-option-id]').value);
+					const optionName = option.querySelector('[data-option-name]').value;
+					options.push({
+						Id: optionId,
+						Name: optionName
+					});
+				});
+
+				variations.push({
+					Id: variationId,
+					Name: variationName,
+					Options: options
+				});
+			});
+
+			const model = {
+				Id: categoryId,
+				Name: categoryName,
+				Products: products,
+				Variations: variations
+			};
+
+			fetch('/Assortment/UpdateCategory', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+				},
+				body: JSON.stringify(model)
+			})
+				.then(response => {
+					if (response.ok) {
+						alert('Category updated successfully!');
+						location.reload();
+					} else {
+						alert('Error updating category');
+					}
+				})
+				.catch(error => {
+					console.error('Fetch error:', error);
+					alert('Unexpected error occurred');
+				});
+		}
+
+		async function addVariationRow(container) {
+			const variationContainer = document.createElement('tr');
+			variationContainer.setAttribute('data-variation', '');
+			const variationIdLabel = document.createElement('td');
+			variationIdLabel.textContent = 'NEW';
+			variationContainer.appendChild(variationIdLabel);
+
+			// Id hidden label
+			const idHiddenInput = document.createElement('input');
+			idHiddenInput.type = 'hidden';
+			idHiddenInput.setAttribute('data-variation-id', '');
+			idHiddenInput.value = 0
+			variationContainer.appendChild(idHiddenInput);
+
+			//Variation name
+			const nameLabel = document.createElement('td');
+			const nameInput = document.createElement('input');
+			nameInput.type = 'text';
+			nameInput.setAttribute('data-variation-name', '');
+			nameInput.placeholder = 'Variation Name';
+			nameInput.required;
+			nameLabel.appendChild(nameInput);
+			variationContainer.appendChild(nameLabel);
+
+			//option list table begin
+			const optionListTableTd = document.createElement('td');
+			const optionListTable = document.createElement('table');
+			const optionListTableRow = document.createElement('tr');
+			optionListTableRow.setAttribute('data-list-option', '');
+
+			//Add variation button
+			const addOptionButtonTd = document.createElement('td');
+			const addOptionButton = document.createElement('button');
+			addOptionButton.type = 'button';
+			addOptionButton.className = 'btn btn-success btn-sm';
+			addOptionButton.textContent = '+';
+			addOptionButton.onclick = function () { onAddOptionButtonClick(this); };
+			addOptionButtonTd.appendChild(addOptionButton);
+			optionListTableRow.appendChild(addOptionButtonTd);
+
+			addVariationOptionRow(optionListTableRow);
+
+			optionListTable.appendChild(optionListTableRow);
+			optionListTableTd.appendChild(optionListTable);
+			variationContainer.appendChild(optionListTableTd);
+
+
+			//Remove button
+			const removeButtonTd = document.createElement('td');
+			const removeButton = document.createElement('button');
+			removeButton.type = 'button';
+			removeButton.className = 'btn btn-danger btn-sm';
+			removeButton.onclick = function () { removeVariation(this); };
+			removeButton.textContent = 'Delete';
+			removeButtonTd.appendChild(removeButton);
+			variationContainer.appendChild(removeButtonTd);
+
+			container.appendChild(variationContainer);
+		}
+		async function addVariationOptionRow(container) {
+			const optionContainer = document.createElement('td');
+			optionContainer.setAttribute('data-option', '');
+			const optionStructure = document.createElement('table');
+
+			// Id hidden label
+			const idHiddenInput = document.createElement('input');
+			idHiddenInput.type = 'hidden';
+			idHiddenInput.setAttribute('data-option-id', '');
+			idHiddenInput.value = 0
+			optionContainer.appendChild(idHiddenInput);
+
+			//Option name
+			const optionNameLabel = document.createElement('td');
+			const optionNameInput = document.createElement('input');
+			optionNameInput.type = 'text';
+			optionNameInput.setAttribute('data-option-name', '');
+			optionNameInput.placeholder = 'Option Name';
+			optionNameInput.required;
+			optionNameLabel.appendChild(optionNameInput);
+			optionStructure.appendChild(optionNameLabel);
+
+			//Remove button
+			const optionRemoveButtonTd = document.createElement('td');
+			const optionRemoveButton = document.createElement('button');
+			optionRemoveButton.type = 'button';
+			optionRemoveButton.className = 'btn btn-danger btn-sm';
+			optionRemoveButton.textContent = 'X';
+			optionRemoveButton.onclick = function () { removeVariationOption(this); };
+			optionRemoveButtonTd.appendChild(optionRemoveButton);
+			optionStructure.appendChild(optionRemoveButtonTd);
+
+			optionContainer.appendChild(optionStructure);
+			container.appendChild(optionContainer);
+		}
+		async function addProductRow(container) {
+			const productRow = document.createElement('tr');
+			productRow.setAttribute('data-product', '');
+
+			// Id hidden label
+			const idHiddenInput = document.createElement('input');
+			idHiddenInput.type = 'hidden';
+			idHiddenInput.setAttribute('data-product-id', '');
+			idHiddenInput.value = 0
+			productRow.appendChild(idHiddenInput);
+
+			//Id label
+			const idLabel = document.createElement('td');
+			idLabel.textContent = 'New';
+			productRow.appendChild(idLabel);
+
+			//Option name
+			const productNameLabel = document.createElement('td');
+			const productNameInput = document.createElement('input');
+			productNameInput.type = 'text';
+			productNameInput.setAttribute('data-product-name', '');
+			productNameInput.placeholder = 'Product Name';
+			productNameInput.required;
+			productNameLabel.appendChild(productNameInput);
+			productRow.appendChild(productNameLabel);
+
+			//Remove button
+			const productRemoveButtonTd = document.createElement('td');
+			const productRemoveButton = document.createElement('button');
+			productRemoveButton.type = 'button';
+			productRemoveButton.className = 'btn btn-danger btn-sm';
+			productRemoveButton.onclick = function () { removeProduct(this); };
+			productRemoveButton.textContent = 'Delete';
+			productRemoveButtonTd.appendChild(productRemoveButton);
+			productRow.appendChild(productRemoveButtonTd);
+
+			container.appendChild(productRow);
+		}
+		
+		async function onAddVariationButtonClick() {
+			const variationTableBody = document.getElementById("variationsTableBody");
+			addVariationRow(variationTableBody);
+		}
+
+		async function onAddOptionButtonClick(btn) {
+			const optionList = btn.closest('tr[data-list-option]');
+			if (optionList) {
+				addVariationOptionRow(optionList);
+			}
+			else { alert("Not found") }
+		}
+		async function onAddProductButtonClick() {
+			const productList = document.getElementById("productTableBody");
+			if (productList) {
+				addProductRow(productList);
+			}
+			else { alert("Not found") }
+		}
+
+		async function removeVariationOption(btn) {
+			try {
+				const option = btn.closest("td[data-option]");
+				if (option) {
+					option.remove();
+				}
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+
+		async function removeVariation(btn) {
+			try {
+				const row = btn.closest("tr[data-variation]");
+				if (row) {
+					row.remove();
+				}
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+
+
+		async function removeProduct(btn) {
+			try {
+				const option = btn.closest("tr[data-product]");
+				if (option) {
+					option.remove();
+				}
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+
+		async function onEditProductButtonClick(id) {
+			try {
+				const response = await fetch(`/Assortment/ProductEditPanel?id=${id}`, {
+					method: "POST",
+					headers: {
+						"RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+					}
+				});
+			}
+			catch (error) {
+				alert("Error: " + error.message);
+			}
+		}
+	</script>
+
+
+
+}

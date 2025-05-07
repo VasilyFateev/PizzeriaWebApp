@@ -1,32 +1,35 @@
-﻿@model AssortmentListViewModel
+﻿@model AssortmentRequestVM
 @{
 	ViewData["Title"] = "Список ассортимента";
 }
 
-@foreach (var category in Model.CategoryListElements)
+@foreach (var category in Model.Categories)
 {
 	@Html.AntiForgeryToken()
-	<h2>@category.Id | @category.CategoryName</h2>
+	<h2>
+		@category.Id | @category.Name
+		<a asp-action="CategoryEditPanel" asp-route-id="@category.Id" class="btn btn-primary">Edit</a>
+	</h2>
 	<table class="table table-striped">
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>Название</th>
-				<th>Вариации</th>
+				<th>Names</th>
+				<th>Variations</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var product in category.ProductsList)
+			@foreach (var product in category.Products)
 			{
 				<tr>
 					<td>@product.Id</td>
 					<td>@product.Name</td>
-					@foreach (var variation in product.VariationList)
+					@foreach (var variation in product.Variations)
 					{
 						<td>
 							<div>@variation.Name</div>
 							<div>
-								@foreach (var option in variation.OptionsList)
+								@foreach (var option in variation.Options)
 								{
 									@if (option.Status)
 									{
@@ -47,9 +50,6 @@
 					</td>
 				</tr>
 			}
-			<tr>
-				@* <a asp-action="ProductEditPanel" asp-route-id="@product" class="btn btn-primary">Редактировать</a> *@
-			</tr>
 		</tbody>
 	</table>
 }
