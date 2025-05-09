@@ -15,7 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ConsoleView\ConsoleView.csproj" />
     <ProjectReference Include="..\DatabaseAccess\AssortmentDatabaseAccess.csproj" />
-    <ProjectReference Include="..\DatabaseControllers\AdminApp.csproj" />
+    <ProjectReference Include="..\DatabaseControllers\AssortmentEditService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

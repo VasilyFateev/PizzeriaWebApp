@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductModelClasses", "Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleView", "ConsoleView\ConsoleView.csproj", "{AB380682-BE48-463A-8DE7-F181937D0EDB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminApp", "DatabaseControllers\AdminApp.csproj", "{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssortmentEditService", "DatabaseControllers\AssortmentEditService.csproj", "{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminAppView", "AdminAppView\AdminAppView.csproj", "{75686C6B-F24E-4489-8A76-41F0D459091B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaAuthorizationService", "PizzeriaAuthorizationService\PizzeriaAuthorizationService.csproj", "{511D0A2B-B7CB-4BF1-A880-CD373E037416}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDatabaseAccess", "PizzeriaAuthorizationService\AccountDatabaseAccess.csproj", "{511D0A2B-B7CB-4BF1-A880-CD373E037416}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsModelClasses", "AccountsModelClasses\AccountsModelClasses.csproj", "{14024BAC-50D4-44BA-B2A9-FCA285262A8D}"
 EndProject

@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatabaseAccess\AssortmentDatabaseAccess.csproj" />
-    <ProjectReference Include="..\DatabaseControllers\AdminApp.csproj" />
-    <ProjectReference Include="..\PizzeriaAuthorizationService\PizzeriaAuthorizationService.csproj" />
+    <ProjectReference Include="..\DatabaseControllers\AssortmentEditService.csproj" />
+    <ProjectReference Include="..\PizzeriaAuthorizationService\AccountDatabaseAccess.csproj" />
   </ItemGroup>
 
 </Project>
