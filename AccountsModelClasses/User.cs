@@ -22,5 +22,4 @@ namespace AccountsModelClasses
 		public ICollection<UserPaymentMethod> UserPaymentMethods { get; set; } = null!;
 		public ICollection<ShopppingCart> ShopppingCarts { get; set; } = null!;
 	}
-
 }

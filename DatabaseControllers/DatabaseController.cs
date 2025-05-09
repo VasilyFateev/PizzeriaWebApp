@@ -110,7 +110,7 @@ namespace AssortmentEditService.DatabaseControllers
 
 			var addList = changes.ToAdd
 				.Where(c => c is not IHasUniqueName CategoryWithUniqueName ||
-				dbSet.FirstOrDefault(x => (x as IHasUniqueName)
+				dbSet.FirstOrDefault(x => ((IHasUniqueName)x)
 					.GetUniqueName() == CategoryWithUniqueName.GetUniqueName()) == null);
 
 			await dbSet.AddRangeAsync(changes.ToAdd);

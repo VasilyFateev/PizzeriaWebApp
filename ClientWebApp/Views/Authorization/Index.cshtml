@@ -1,0 +1,28 @@
+﻿@{
+	ViewData["Title"] = "Index";
+}
+
+<!DOCTYPE html>
+<html>
+<body>
+	<form id="authorization">
+		<h2>Login</h2>
+		<div id="login">
+			<p>
+				Login<br />
+				<input type="text" data-login placeholder="Phone or E-mail" />
+			</p>
+			<p>
+				Password<br />
+				<input type="password" data-password placeholder="Password" />
+			</p>
+			<button type="button" class="btn btn-success btn-sm" onclick="sendAuthRequest()">Send</button>
+			<div id="message"></div>
+		</div>
+	</form>
+
+	@section Scripts {
+		<script src="~/js/auth.js"></script>
+	}
+</body>
+</html>

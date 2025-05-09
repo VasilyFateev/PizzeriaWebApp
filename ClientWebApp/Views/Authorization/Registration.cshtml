@@ -1,0 +1,36 @@
+﻿@{
+	ViewData["Title"] = "Registration";
+}
+
+<!DOCTYPE html>
+<html>
+<body>
+	<form id="registration">
+		<h2>Login</h2>
+		<div id="login">
+			<p>
+				Name<br />
+				<input type="text" data-name placeholder="Your name" />
+			</p>
+			<p>
+				Login<br />
+				<input type="text" data-login placeholder="Phone or E-mail" />
+			</p>
+			<p>
+				Password<br />
+				<input type="password" data-password placeholder="Password" />
+			</p>
+			<p>
+				Repaet Password<br />
+				<input type="password" data-password-repeat placeholder="Password" />
+			</p>
+			<button type="button" class="btn btn-success btn-sm" onclick="sendRegRequest()">Send</button>
+			<div id="message"></div>
+		</div>
+	</form>
+
+	@section Scripts {
+		<script src="~/js/auth.js"></script>
+	}
+</body>
+</html>
