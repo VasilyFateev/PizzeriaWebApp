@@ -1,6 +1,6 @@
 ﻿using ModelClasses;
 
-namespace AdminApp.DatabaseControllers
+namespace AssortmentEditService.DatabaseControllers
 {
     public class AssortimentDatabaseChanges
     {

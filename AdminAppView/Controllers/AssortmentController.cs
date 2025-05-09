@@ -1,4 +1,4 @@
-﻿using AdminApp.DatabaseControllers;
+﻿using AssortmentEditService.DatabaseControllers;
 using AdminAppView.Models;
 using DatabaseAccess;
 using Microsoft.AspNetCore.Mvc;

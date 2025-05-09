@@ -1,4 +1,4 @@
-﻿using AdminApp.DatabaseControllers;
+﻿using AssortmentEditService.DatabaseControllers;
 using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using ModelClasses;

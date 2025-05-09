@@ -1,4 +1,4 @@
-﻿namespace AdminApp.DatabaseControllers
+﻿namespace AssortmentEditService.DatabaseControllers
 {
     public interface IRepository<T> where T : class
     {

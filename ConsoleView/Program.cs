@@ -1,8 +1,8 @@
 ﻿using DatabaseAccess;
-using AdminApp.DatabaseControllers;
+using AssortmentEditService.DatabaseControllers;
 using ModelClasses;
-using AdminApp.ViewController;
-using AdminApp.CustomExceptions;
+using AssortmentEditService.ViewController;
+using AssortmentEditService.CustomExceptions;
 
 using (AssortementDataContext db = new())
 {

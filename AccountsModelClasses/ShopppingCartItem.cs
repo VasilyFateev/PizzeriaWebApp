@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountsModelClasses
 {
 	[Table("shopping_cart_item")]
 	public class ShopppingCartItem
 	{
+		[Key]
 		[Column("id")]
 		public long Id { get; set; } = default!;
 		[Column("cart_id")]

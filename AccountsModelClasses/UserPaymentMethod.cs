@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccountsModelClasses
 {
 	[Table("user_payment_method")]
 	public class UserPaymentMethod
 	{
+		[Key]
 		[Column("id")]
 		public long Id { get; set; } = default!;
 		[Column("user_id")]

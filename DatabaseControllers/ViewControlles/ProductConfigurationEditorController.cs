@@ -1,8 +1,8 @@
-﻿using AdminApp.DatabaseControllers;
-using AdminApp.CustomExceptions;
+﻿using AssortmentEditService.DatabaseControllers;
+using AssortmentEditService.CustomExceptions;
 using ModelClasses;
 
-namespace AdminApp.ViewController
+namespace AssortmentEditService.ViewController
 {
     public class ProductConfigurationEditorController
     {

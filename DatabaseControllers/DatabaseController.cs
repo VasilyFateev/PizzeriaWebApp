@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ModelClasses;
 using ModelClasses.Interfaces;
 
-namespace AdminApp.DatabaseControllers
+namespace AssortmentEditService.DatabaseControllers
 {
 	public class DatabaseController(AssortementDataContext db)
 	{

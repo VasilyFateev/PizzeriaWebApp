@@ -1,4 +1,4 @@
-﻿namespace AdminApp.CustomExceptions
+﻿namespace AssortmentEditService.CustomExceptions
 {
     public class NonUniqueNameException(Type T) : Exception()
     {

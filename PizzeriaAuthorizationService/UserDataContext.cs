@@ -1,7 +1,7 @@
 ﻿using AccountsModelClasses;
 using Microsoft.EntityFrameworkCore;
 
-namespace PizzeriaAuthorizationService
+namespace AuthorizationService
 {
 	public class UserDataContext : DbContext
 	{

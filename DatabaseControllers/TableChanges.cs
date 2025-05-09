@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace AdminApp.DatabaseControllers
+namespace AssortmentEditService.DatabaseControllers
 {
 
     public class TableChanges<T> where T : class
