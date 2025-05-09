@@ -10,11 +10,11 @@ namespace AdminAppView.Controllers
 {
 	public class AssortmentController : Controller
 	{
-		private readonly AssortementSetupApplicationContext _context;
+		private readonly AssortementDataContext _context;
 		private readonly DatabaseController databaseController;
 		private readonly AssortimentDatabaseChanges databaseChanges;
 
-		public AssortmentController(AssortementSetupApplicationContext dbContext)
+		public AssortmentController(AssortementDataContext dbContext)
 		{
 			_context = dbContext;
 			databaseController = new DatabaseController(_context);

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DatabaseAccess.Migrations
 {
-    [DbContext(typeof(AssortementSetupApplicationContext))]
+    [DbContext(typeof(AssortementDataContext))]
     [Migration("20250426040910_Initial")]
     partial class Initial
     {

@@ -3,15 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{E27ADDB0-BC7F-414F-BE96-BE77F4B5F475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssortmentDatabaseAccess", "DatabaseAccess\AssortmentDatabaseAccess.csproj", "{E27ADDB0-BC7F-414F-BE96-BE77F4B5F475}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelClasses", "ModelClasses\ModelClasses.csproj", "{22DE5DD6-05F5-4517-A8D1-AC116F0B89BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductModelClasses", "ModelClasses\ProductModelClasses.csproj", "{22DE5DD6-05F5-4517-A8D1-AC116F0B89BC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleView", "ConsoleView\ConsoleView.csproj", "{AB380682-BE48-463A-8DE7-F181937D0EDB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminApp", "DatabaseControllers\AdminApp.csproj", "{7B42C07C-14BD-4C1B-8D02-9DC71EDD0FE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminAppView", "AdminAppView\AdminAppView.csproj", "{75686C6B-F24E-4489-8A76-41F0D459091B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminAppView", "AdminAppView\AdminAppView.csproj", "{75686C6B-F24E-4489-8A76-41F0D459091B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaAuthorizationService", "PizzeriaAuthorizationService\PizzeriaAuthorizationService.csproj", "{511D0A2B-B7CB-4BF1-A880-CD373E037416}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsModelClasses", "AccountsModelClasses\AccountsModelClasses.csproj", "{14024BAC-50D4-44BA-B2A9-FCA285262A8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{75686C6B-F24E-4489-8A76-41F0D459091B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75686C6B-F24E-4489-8A76-41F0D459091B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75686C6B-F24E-4489-8A76-41F0D459091B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511D0A2B-B7CB-4BF1-A880-CD373E037416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511D0A2B-B7CB-4BF1-A880-CD373E037416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511D0A2B-B7CB-4BF1-A880-CD373E037416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511D0A2B-B7CB-4BF1-A880-CD373E037416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14024BAC-50D4-44BA-B2A9-FCA285262A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14024BAC-50D4-44BA-B2A9-FCA285262A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14024BAC-50D4-44BA-B2A9-FCA285262A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14024BAC-50D4-44BA-B2A9-FCA285262A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

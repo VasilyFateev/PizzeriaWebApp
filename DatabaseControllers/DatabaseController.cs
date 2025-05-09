@@ -5,7 +5,7 @@ using ModelClasses.Interfaces;
 
 namespace AdminApp.DatabaseControllers
 {
-	public class DatabaseController(AssortementSetupApplicationContext db)
+	public class DatabaseController(AssortementDataContext db)
 	{
 		public async Task<List<ProductCategory>> GetLinkedList()
 		{

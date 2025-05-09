@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AssortementSetupApplicationContext>(options => options.UseNpgsql(DatabaseConnectionString.ConnectionString));
+builder.Services.AddDbContext<AssortementDataContext>(options => options.UseNpgsql(DatabaseConnectionString.AssortmentDatabaseConnectionString));
 
 var app = builder.Build();
 

@@ -4,7 +4,7 @@ using ModelClasses;
 using AdminApp.ViewController;
 using AdminApp.CustomExceptions;
 
-using (AssortementSetupApplicationContext db = new())
+using (AssortementDataContext db = new())
 {
     bool isAvalaible = db.Database.CanConnect();
 

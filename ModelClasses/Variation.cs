@@ -10,7 +10,6 @@ namespace ModelClasses
         [Column("id")]
         public int Id { get; set; }
 
-        [ForeignKey("FK_variation_product_category_id")]
         [Column("product_category_id")]
         public int CategoryId { get; set; } = default!;
 
