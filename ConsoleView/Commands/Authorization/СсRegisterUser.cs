@@ -15,7 +15,7 @@ namespace ConsoleView.Commands.Authorization
 			{
 				using (db = new())
 				{
-					var controller = new AuthorizationController(db);
+					var controller = new RegistrationController(db);
 					if (args.Length != 3)
 					{
 						return $"[ERROR] Incorrect argument count.";

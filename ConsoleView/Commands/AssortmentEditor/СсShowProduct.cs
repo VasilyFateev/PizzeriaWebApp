@@ -1,11 +1,11 @@
-﻿using AssortmentEditService.CustomExceptions;
+﻿using AssortmentDatabaseAccess;
+using AssortmentEditService.CustomExceptions;
 using AssortmentEditService.DatabaseControllers;
-using DatabaseAccess;
-using ModelClasses;
+using ProductModelClasses;
 
 namespace ConsoleView.Commands.AssortmentEditor
 {
-	internal class СсShowProduct : IConsoleCommand
+    internal class СсShowProduct : IConsoleCommand
     {
         public string ConsoleGroupName => "Assortment Editor";
         public string Name => "showProduct";

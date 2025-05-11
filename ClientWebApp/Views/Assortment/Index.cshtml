@@ -1,4 +1,5 @@
-﻿@{
+﻿@model AssortmentListRequestVM
+@{
     ViewData["Title"] = "Index";
 }
-<div>Test</div>
+@await Html.PartialAsync("_AssortmentList", Model)

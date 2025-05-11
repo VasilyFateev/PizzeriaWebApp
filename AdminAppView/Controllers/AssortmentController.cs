@@ -1,14 +1,14 @@
 ﻿using AssortmentEditService.DatabaseControllers;
 using AdminAppView.Models;
-using DatabaseAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ModelClasses;
+using ProductModelClasses;
 using System.Collections.Generic;
+using AssortmentDatabaseAccess;
 
 namespace AdminAppView.Controllers
 {
-	public class AssortmentController : Controller
+    public class AssortmentController : Controller
 	{
 		private readonly AssortementDataContext _context;
 		private readonly DatabaseController databaseController;

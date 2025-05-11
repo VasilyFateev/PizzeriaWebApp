@@ -1,4 +1,4 @@
-﻿using ModelClasses;
+﻿using ProductModelClasses;
 using System.Text;
 
 public class ProductStringBuilder

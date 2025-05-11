@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CustomExceptions\CustomExceptions.csproj" />
     <ProjectReference Include="..\DatabaseAccess\AssortmentDatabaseAccess.csproj" />
+    <ProjectReference Include="..\ModelClasses\ProductModelClasses.csproj" />
   </ItemGroup>
 
 </Project>

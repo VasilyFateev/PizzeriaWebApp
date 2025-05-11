@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ModelClasses
+namespace ProductModelClasses
 {
     [Table("product")]
     public class Product : Interfaces.IHasPrimaryKey, Interfaces.IHasUniqueName

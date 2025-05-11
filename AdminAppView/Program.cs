@@ -1,4 +1,4 @@
-using DatabaseAccess;
+using AssortmentDatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

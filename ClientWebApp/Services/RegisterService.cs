@@ -14,7 +14,7 @@ namespace ClientWebApp.Services
 				if (authorizationData != null)
 				{
 					UserDataContext db = new();
-					var controller = new AuthorizationController(db);
+					var controller = new RegistrationController(db);
 					var login = authorizationData.Login;
 
 					User? user = login switch

@@ -1,4 +1,4 @@
-﻿using ModelClasses;
+﻿using ProductModelClasses;
 
 namespace AssortmentEditService.DatabaseControllers
 {

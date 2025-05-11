@@ -1,4 +1,4 @@
-﻿namespace ModelClasses.Interfaces
+﻿namespace ProductModelClasses.Interfaces
 {
 	public interface IHasUniqueName
 	{

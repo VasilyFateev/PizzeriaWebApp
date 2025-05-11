@@ -1,5 +1,5 @@
-﻿using AssortmentEditService.DatabaseControllers;
-using DatabaseAccess;
+﻿using AssortmentDatabaseAccess;
+using AssortmentEditService.DatabaseControllers;
 using System.Text;
 
 namespace ConsoleView.Commands.AssortmentEditor

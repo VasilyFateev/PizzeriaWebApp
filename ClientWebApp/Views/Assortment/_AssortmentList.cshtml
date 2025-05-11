@@ -1,0 +1,32 @@
+﻿@model AssortmentListRequestVM
+@{
+	ViewData["Title"] = "Меню";
+}
+
+@foreach (var category in Model.Categories)
+{
+	@Html.AntiForgeryToken()
+	<h2>@category.Name</h2>
+	var products = category.Products;
+	<table>
+		@for (int i = 0, row = 0; i < products.Length; row++)
+		{
+			<tr>
+				@for(int column = 0; column < 4 && i < products.Length; column++, i++)
+				{
+					var product = products[i];
+					<td>
+						<div>
+							<div>No Image</div>
+							<div>@product.Description</div>
+							<div>
+								От @product.MinPrice
+								<button type="button" class="btn btn-success btn-sm">Выбрать</button>
+							</div>
+						</div>
+					</td>
+				}
+			</tr>
+		}
+	</table>
+}

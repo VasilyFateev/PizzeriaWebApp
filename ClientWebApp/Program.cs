@@ -2,8 +2,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ClientWebApp.Services;
 using ClientWebApp.Services.Utility;
+using AssortmentDatabaseAccess;
+using Microsoft.EntityFrameworkCore;
+using AuthorizationService;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AssortementDataContext>(options => options.UseNpgsql(AssortmentDatabaseAccess.DatabaseConnectionString.AssortmentDatabaseConnectionString));
+builder.Services.AddDbContext<UserDataContext>(options => options.UseNpgsql(AuthorizationService.DatabaseConnectionString.UsersDatabaseConnectionString));
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();

@@ -17,6 +17,8 @@
     <ProjectReference Include="..\ConsoleView\ConsoleView.csproj" />
     <ProjectReference Include="..\DatabaseAccess\AssortmentDatabaseAccess.csproj" />
     <ProjectReference Include="..\DatabaseControllers\AssortmentEditService.csproj" />
+    <ProjectReference Include="..\ModelClasses\ProductModelClasses.csproj" />
+    <ProjectReference Include="..\OrderOrchestratorService\OrderOrchestratorService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

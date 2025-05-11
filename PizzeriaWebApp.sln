@@ -13,13 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssortmentEditService", "Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminAppView", "AdminAppView\AdminAppView.csproj", "{75686C6B-F24E-4489-8A76-41F0D459091B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDatabaseAccess", "PizzeriaAuthorizationService\AccountDatabaseAccess.csproj", "{511D0A2B-B7CB-4BF1-A880-CD373E037416}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountDatabaseAccess", "PizzeriaAuthorizationService\AccountDatabaseAccess.csproj", "{511D0A2B-B7CB-4BF1-A880-CD373E037416}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountsModelClasses", "AccountsModelClasses\AccountsModelClasses.csproj", "{14024BAC-50D4-44BA-B2A9-FCA285262A8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccountsModelClasses", "AccountsModelClasses\AccountsModelClasses.csproj", "{14024BAC-50D4-44BA-B2A9-FCA285262A8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService", "AuthorizationService\AuthorizationService.csproj", "{66994450-77C1-4705-8246-38B1D381C3B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService", "AuthorizationService\AuthorizationService.csproj", "{66994450-77C1-4705-8246-38B1D381C3B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWebApp", "ClientWebApp\ClientWebApp.csproj", "{86E0F918-0B95-431C-A9AC-2323A868D0A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientWebApp", "ClientWebApp\ClientWebApp.csproj", "{86E0F918-0B95-431C-A9AC-2323A868D0A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderOrchestratorService", "OrderOrchestratorService\OrderOrchestratorService.csproj", "{47770A78-E277-401F-AD84-9955BDA51EB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomExceptions", "CustomExceptions\CustomExceptions.csproj", "{F73C73C1-9306-4CC7-A7AE-F15F84522A88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{86E0F918-0B95-431C-A9AC-2323A868D0A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86E0F918-0B95-431C-A9AC-2323A868D0A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86E0F918-0B95-431C-A9AC-2323A868D0A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47770A78-E277-401F-AD84-9955BDA51EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47770A78-E277-401F-AD84-9955BDA51EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47770A78-E277-401F-AD84-9955BDA51EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47770A78-E277-401F-AD84-9955BDA51EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F73C73C1-9306-4CC7-A7AE-F15F84522A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73C73C1-9306-4CC7-A7AE-F15F84522A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73C73C1-9306-4CC7-A7AE-F15F84522A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73C73C1-9306-4CC7-A7AE-F15F84522A88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

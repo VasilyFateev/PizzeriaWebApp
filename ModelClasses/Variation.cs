@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ModelClasses
+namespace ProductModelClasses
 {
     [Table("variation")]
     public class Variation : Interfaces.IHasPrimaryKey, Interfaces.IHasUniqueName

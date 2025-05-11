@@ -1,11 +1,11 @@
-﻿using DatabaseAccess;
+﻿using AssortmentDatabaseAccess;
 using Microsoft.EntityFrameworkCore;
-using ModelClasses;
-using ModelClasses.Interfaces;
+using ProductModelClasses;
+using ProductModelClasses.Interfaces;
 
 namespace AssortmentEditService.DatabaseControllers
 {
-	public class DatabaseController(AssortementDataContext db)
+    public class DatabaseController(AssortementDataContext db)
 	{
 		public async Task<List<ProductCategory>> GetLinkedList()
 		{

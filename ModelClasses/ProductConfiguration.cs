@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ModelClasses
+namespace ProductModelClasses
 {
     [Table("product_configuration")]
     public class ProductConfiguration
