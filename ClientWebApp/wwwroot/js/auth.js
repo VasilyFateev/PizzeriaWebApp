@@ -1,6 +1,8 @@
 ﻿async function sendAuthRequest() {
     const login = document.querySelector('[data-login]').value;
     const password = document.querySelector('[data-password]').value;
+    var tokenKey = "accessToken";
+    document.getElementById("message").innerText = "";
     try {
         const response = await fetch("/api/auth", {
             method: "POST",
@@ -11,10 +13,14 @@
             body: JSON.stringify({ Login: login, Password: password })
         });
 
-        if (!response.ok) throw new Error('Network error');
+        if (!response.ok) {
+            console.log("Status: ", response.status);
+            throw new Error('Network error');
+        }
 
         const result = await response.json();
-        document.getElementById("message").innerText = result.text;
+        sessionStorage.setItem(tokenKey, result.access_token);
+        document.getElementById("message").innerText = "Authorization success";
     } catch (error) {
         document.getElementById("message").innerText = "Authorization failed";
         console.error("Auth error:", error);
@@ -51,4 +57,14 @@ async function sendRegRequest() {
         document.getElementById("message").innerText = "Registaration failed";
         console.error("Auth error:", error);
     }
+}
+async function testAvrotizationRequest() {
+    const response = await fetch("/api/test", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ Login: login, Name: name, Password: password, PasswordRepeat: passwordRepeat })
+    });
 }

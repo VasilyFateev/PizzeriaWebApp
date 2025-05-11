@@ -1,5 +1,9 @@
 ﻿using AccountsModelClasses;
 using AuthorizationService;
+using ClientWebApp.Services.Utility;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace ClientWebApp.Services
 {
@@ -7,7 +11,6 @@ namespace ClientWebApp.Services
 	{
 		public async Task<IResult> HandleAuthRequest(HttpContext context)
 		{
-			var message = "Incorrect arguments";
 			try
 			{
 				var authorizationData = await context.Request.ReadFromJsonAsync<ProvidedAuthorizationData>();
@@ -25,17 +28,34 @@ namespace ClientWebApp.Services
 					};
 					if (user is not null)
 					{
-						message = $"Hello, {user.Name}!";
+						var claims = new List<Claim> { new(ClaimTypes.Name, login) };
+						var jwt = new JwtSecurityToken(
+								issuer: AuthOptions.ISSUER,
+								audience: AuthOptions.AUDIENCE,
+								claims: claims,
+								expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+								signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+						var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+                        context.Response.Cookies.Append("access_token", encodedJwt, new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true,
+                            SameSite = SameSiteMode.Strict,
+                            Expires = DateTime.UtcNow.AddHours(1)
+                        });
+
+                        await context.Response.WriteAsJsonAsync(new { access_token = encodedJwt });
+                        return Results.Ok();
 					}
 					else
 					{
-						message = "Invalid Login";
+						return Results.Unauthorized();
 					}
 				}
 			}
 			catch { }
 
-			return Results.Json(new { text = message });
+			return Results.BadRequest();
 		}
 		record ProvidedAuthorizationData(string Login, string Password);
 	}

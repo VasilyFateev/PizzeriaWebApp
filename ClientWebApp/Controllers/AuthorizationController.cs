@@ -11,8 +11,7 @@ namespace ClientWebApp.Controllers
 
 		public IActionResult Registration()
 		{
-
 			return View();
 		}
-	}
+    }
 }

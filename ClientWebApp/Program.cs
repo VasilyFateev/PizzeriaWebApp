@@ -1,43 +1,72 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ClientWebApp.Services;
-using System;
+using ClientWebApp.Services.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<RegisterService>();
-
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = AuthOptions.ISSUER,
+            ValidateAudience = true,
+            ValidAudience = AuthOptions.AUDIENCE,
+            ValidateLifetime = true,
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["access_token"];
+                return Task.CompletedTask;
+            }
+        };
+    });
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Home/Error");
-	app.UseHsts();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
-
-app.MapPost("/api/auth", async (AuthService authService, HttpContext context) => await authService.HandleAuthRequest(context));
-app.MapPost("/api/reg", async (RegisterService regService, HttpContext context) => await regService.HandleRegRequest(context));
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-	name: "authorization",
-	pattern: "auth",
-	defaults: new { controller = "Authorization", action = "Index" });
+var api = app.MapGroup("/api");
+api.MapPost("/auth", async (AuthService authService, HttpContext context) => await authService.HandleAuthRequest(context));
+api.MapPost("/reg", async (RegisterService regService, HttpContext context) => await regService.HandleRegRequest(context));
 
 app.MapControllerRoute(
-	name: "registration",
-	pattern: "reg",
-	defaults: new { controller = "Authorization", action = "Registration" });
+    name: "auth",
+    pattern: "auth",
+    defaults: new { controller = "Authorization", action = "Index" });
 
 app.MapControllerRoute(
-	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "reg",
+    pattern: "reg",
+    defaults: new { controller = "Authorization", action = "Registration" });
+
+app.MapControllerRoute(
+    name: "test",
+    pattern: "test",
+    defaults: new { controller = "Assortment", action = "Index" });
+
+app.MapControllerRoute(
+name: "default",
+pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
